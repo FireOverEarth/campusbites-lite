@@ -10,6 +10,7 @@ export const Item = z
     area: z.string().max(80).nullable(),
     priceCents: z.number().int().nonnegative().nullable(),
     unit: z.enum(["item", "weight", "unknown"]),
+    ingredients: z.array(z.string().min(1).max(40)).max(40).optional(),
   })
   .strict();
 export type Item = z.infer<typeof Item>;

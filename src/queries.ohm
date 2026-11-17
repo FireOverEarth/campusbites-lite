@@ -1,0 +1,27 @@
+CampusQuery {
+ Request = (Eat | Where | Lookup | Bare) ending*
+ Eat = Field* polite* desire? action quantity? Field* Name Field*
+ Where = Field* Name locationQuestion Field*
+ Lookup = polite* ("找" | "查") "一下"? Field* Name Field*
+ Bare = Field* Name Field*
+ Field = separator* (Place | Price) "的"?
+ Name = Food | Ingredient
+ Food = "«F" digit+ "»"
+ Ingredient = "«I" digit+ "»"
+ Place = "«P" digit+ "»"
+ Price = "预算"? (Upper | Lower | Suffix)
+ Upper = ("低于" | "少于" | "不到" | "不超过") number ("元" | "块")
+ Lower = ("高于" | "超过" | "不少于") number ("元" | "块")
+ Suffix = number ("元" | "块") ("以内" | "以下" | "以上" | "起")
+ number = decimalNumber | chineseDigit+
+ decimalNumber = digit+ ("." digit digit?)?
+ chineseDigit = "一" | "二" | "两" | "三" | "四" | "五" | "六" | "七" | "八" | "九" | "十" | "百" | "零"
+ polite = "麻烦" | "帮我" | "给我" | "请"
+ desire = "我"? degree? ("想" | "要")
+ degree = "特别" | "非常" | "真的" | "很"
+ action = "推荐一下" | "推荐" | "吃" | "喝" | "来"
+ quantity = "一个" | "一份" | "一碗" | "一点" | "一些" | "点"
+ locationQuestion = "在哪里能吃到" | "哪里能吃到" | "在哪里能吃" | "哪里能吃" | "哪儿有" | "哪里有" | "在哪里" | "在哪儿" | "在哪"
+ separator = "，" | ","
+ ending = "？" | "?" | "！" | "!" | "。" | "吧" | "啊" | "呀" | "呢"
+}

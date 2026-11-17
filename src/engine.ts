@@ -1,4 +1,4 @@
-import { parseFast } from "./fast-query.ts";
+import { FastParser } from "./fast-query.ts";
 import type { Item } from "./catalog.ts";
 export const HELP =
   "可以问：牛肉面、我想吃牛肉面、推荐西苑20元以内的牛肉面、随便推荐。也可以使用网页里的筛选框。";
@@ -6,6 +6,8 @@ export type Query = {
   name: string;
   area?: string;
   maxPriceCents?: number;
+  minPriceCents?: number;
+  ingredient?: string;
   random?: boolean;
 };
 export type Answer = {
@@ -20,6 +22,8 @@ export function search(rows: Item[], schoolId: number, q: Query): Answer {
     (r) =>
       r.schoolId === schoolId &&
       (!q.name || r.name === q.name) &&
+      (!q.ingredient || r.ingredients?.includes(q.ingredient)) &&
+      (q.minPriceCents === undefined || (r.unit === "item" && r.priceCents !== null && r.priceCents >= q.minPriceCents)) &&
       (!q.area || r.area?.includes(q.area)) &&
       (q.maxPriceCents === undefined ||
         (r.unit === "item" &&
@@ -57,16 +61,20 @@ export function search(rows: Item[], schoolId: number, q: Query): Answer {
       : "暂时没找到符合条件的菜单，试试其他菜名或调整筛选条件。",
   };
 }
+const parsers = new WeakMap<Item[], Map<number, FastParser>>();
 export function answer(rows: Item[], schoolId: number, text: string): Answer {
   if (text.trim() === "随便推荐")
     return search(rows, schoolId, { name: "", random: true });
-  const known = new Set(
-    rows.filter((r) => r.schoolId === schoolId).map((r) => r.name),
-  );
-  const frame = parseFast(text, known, schoolId);
+  let schools = parsers.get(rows);
+  if (!schools) { schools = new Map(); parsers.set(rows, schools); }
+  let parser = schools.get(schoolId);
+  if (!parser) { parser = new FastParser(rows, schoolId); schools.set(schoolId, parser); }
+  const frame = parser.parse(text);
   if (!frame) return { status: "HELP", text: HELP, items: [] };
   return search(rows, schoolId, {
     name: frame.target,
+    ...(frame.ingredient ? { ingredient: frame.ingredient } : {}),
+    ...(frame.minPriceCents === null ? {} : { minPriceCents: frame.minPriceCents }),
     ...(frame.location ? { area: frame.location } : {}),
     ...(frame.maxPriceCents === null
       ? {}
