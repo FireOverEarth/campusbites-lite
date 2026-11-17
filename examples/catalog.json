@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "schoolId": 1,
+    "shopId": 1,
+    "shopName": "演示面馆",
+    "name": "牛肉面",
+    "area": "西苑",
+    "priceCents": 1500,
+    "unit": "item"
+  },
+  {
+    "id": 2,
+    "schoolId": 1,
+    "shopId": 2,
+    "shopName": "演示饭堂",
+    "name": "鸡腿饭",
+    "area": "中苑",
+    "priceCents": 1800,
+    "unit": "item"
+  },
+  {
+    "id": 3,
+    "schoolId": 1,
+    "shopId": 3,
+    "shopName": "演示小吃店",
+    "name": "牛肉面",
+    "area": "西苑",
+    "priceCents": 2200,
+    "unit": "item"
+  },
+  {
+    "id": 4,
+    "schoolId": 1,
+    "shopId": 4,
+    "shopName": "演示家常菜",
+    "name": "番茄炒蛋",
+    "area": "东苑",
+    "priceCents": 1200,
+    "unit": "item"
+  }
+]

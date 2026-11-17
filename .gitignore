@@ -1,0 +1,7 @@
+node_modules/
+.local/
+.env*
+!.env.example
+*.sqlite*
+coverage/
+.DS_Store
